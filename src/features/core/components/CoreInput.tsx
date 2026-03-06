@@ -2,6 +2,8 @@ interface Props {
   label: string;
   placeholder?: string;
   type?: string;
+  defaultValue?: string;
+  disabled?: boolean;
   onChange?: (value: string) => void;
 }
 
@@ -9,6 +11,8 @@ function CoreInput({
   label,
   placeholder = "",
   type = "text",
+  defaultValue,
+  disabled,
   onChange,
 }: Props) {
   return (
@@ -18,6 +22,8 @@ function CoreInput({
         type={type}
         placeholder={placeholder}
         className="input input-md"
+        defaultValue={defaultValue}
+        disabled={disabled}
         onChange={(e) => onChange?.(e.target.value)}
       />
     </label>

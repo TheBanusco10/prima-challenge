@@ -1,23 +1,25 @@
 interface Props {
   onNextStep?: () => void;
   onPreviousStep?: () => void;
+  totalSteps: number;
   currentStep?: number;
-  totalSteps?: number;
+  isValidStep?: boolean;
 }
 
 function CoreForm({
-  children,
   onNextStep,
   onPreviousStep,
-  currentStep = 1,
+  children,
   totalSteps,
+  isValidStep = true,
+  currentStep = 1,
 }: React.PropsWithChildren<Props>) {
-  const canGoNext = currentStep < (totalSteps || 1);
+  const canGoNext = currentStep < (totalSteps || 1) && isValidStep;
   const isFinalStep = currentStep === (totalSteps || 1);
   const isFirstStep = currentStep === 1;
 
   return (
-    <section className="flex flex-col gap-8">
+    <section className="flex flex-col gap-8 p-4">
       {children}
       <div className="flex justify-between">
         <button
@@ -36,7 +38,11 @@ function CoreForm({
             Next
           </button>
         )}
-        {isFinalStep && <button className="btn btn-primary">Send</button>}
+        {isFinalStep && (
+          <button className="btn btn-primary" disabled={!isValidStep}>
+            Send
+          </button>
+        )}
       </div>
     </section>
   );
