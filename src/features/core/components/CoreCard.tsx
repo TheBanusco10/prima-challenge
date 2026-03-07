@@ -1,4 +1,5 @@
 interface Props {
+  additionalClasses?: string;
   Title?: () => React.ReactNode;
   Content?: () => React.ReactNode;
   Actions?: () => React.ReactNode;
@@ -6,9 +7,18 @@ interface Props {
   OverImage?: () => React.ReactNode;
 }
 
-function CoreCard({ Title, Content, Actions, Image, OverImage }: Props) {
+function CoreCard({
+  additionalClasses,
+  Title,
+  Content,
+  Actions,
+  Image,
+  OverImage,
+}: Props) {
   return (
-    <div className="card bg-base-100 w-96 shadow-sm">
+    <div
+      className={`card bg-base-100 w-96 shadow-sm ${additionalClasses || ""}`}
+    >
       {Image && (
         <figure className="relative">
           <Image />

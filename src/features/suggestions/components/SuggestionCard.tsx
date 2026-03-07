@@ -1,14 +1,17 @@
 import CoreCard from "@/features/core/components/CoreCard";
-import { MdiThumbDownOutline } from "@/features/core/icons/ThumbDownOutline";
+import { ThumbDownOutline } from "@/features/core/icons/ThumbDownOutline";
 import { ThumbUpOutline } from "@/features/core/icons/ThumbUpOutline";
 import type { Suggestion } from "../domain/models/Suggestion";
 import type { SuggestionStatus } from "../domain/types/suggestions";
+import { ThumbUp } from "@/features/core/icons/ThumbUp";
+import { ThumbDown } from "@/features/core/icons/ThumbDown";
 
-interface Props extends ActionsProps {
+interface Props extends OverImageProps {
   suggestion: Suggestion;
 }
 
-interface ActionsProps {
+interface OverImageProps {
+  badges: string[];
   status?: SuggestionStatus | null;
   onLike?: () => void;
   onDislike?: () => void;
@@ -23,47 +26,63 @@ function Image({ imageUrl, title }: { imageUrl: string; title: string }) {
     />
   );
 }
-
-function OverImage({ badges }: { badges: string[] }) {
-  return (
-    <section className="absolute bottom-2 left-2 flex gap-2">
-      {badges.map((badge) => (
-        <div key={badge} className="badge badge-secondary badge-soft badge-sm">
-          {badge}
-        </div>
-      ))}
-    </section>
-  );
-}
-
-function Actions({ status, onLike, onDislike }: ActionsProps) {
+function OverImage({ badges, status, onLike, onDislike }: OverImageProps) {
   const liked = status === "liked";
   const disliked = status === "disliked";
 
   return (
-    <section className="w-full flex justify-between">
-      <div className="tooltip" data-tip="Did it match your preference?">
-        <div className="flex gap-1">
+    <>
+      <section className="absolute bottom-2 left-2 flex gap-2">
+        {badges.map((badge) => (
+          <div
+            key={badge}
+            className="badge badge-secondary badge-soft badge-sm"
+          >
+            {badge}
+          </div>
+        ))}
+      </section>
+      <div
+        className="absolute right-2 top-2 tooltip tooltip-left"
+        data-tip="Did it match your preference?"
+      >
+        <div className="flex gap-2">
           <button
-            className={`btn btn-circle btn-ghost ${liked ? "text-success" : ""}`}
+            className={`btn btn-circle btn-soft ${liked ? "text-success" : ""}`}
             onClick={onLike}
             disabled={liked}
           >
-            <ThumbUpOutline width="1.3rem" height="1.3rem" />
+            {liked ? (
+              <ThumbUp width="1.3rem" height="1.3rem" />
+            ) : (
+              <ThumbUpOutline width="1.3rem" height="1.3rem" />
+            )}
           </button>
           <button
-            className={`btn btn-circle btn-ghost ${disliked ? "text-error" : ""}`}
+            className={`btn btn-circle btn-soft ${disliked ? "text-error" : ""}`}
             onClick={onDislike}
             disabled={disliked}
           >
-            <MdiThumbDownOutline width="1.3rem" height="1.3rem" />
+            {!disliked ? (
+              <ThumbDownOutline width="1.3rem" height="1.3rem" />
+            ) : (
+              <ThumbDown width="1.3rem" height="1.3rem" />
+            )}
           </button>
         </div>
       </div>
-      <a href="#" className="btn btn-link">
-        See recipe
-      </a>
-    </section>
+    </>
+  );
+}
+
+function Actions() {
+  return (
+    <a
+      href="#"
+      className="w-full btn btn-primary btn-soft rounded-tl-none rounded-tr-none"
+    >
+      See recipe
+    </a>
   );
 }
 
@@ -71,12 +90,18 @@ function SuggestionCard({ suggestion, onLike, onDislike }: Props) {
   const { meal, status, tags } = suggestion;
   return (
     <CoreCard
+      additionalClasses="[&_.card-body]:p-0 [&_.card-title]:p-6"
       Title={() => meal.title}
-      Actions={() => (
-        <Actions status={status} onLike={onLike} onDislike={onDislike} />
-      )}
+      Actions={() => <Actions />}
       Image={() => <Image imageUrl={meal.mealThumb} title={meal.title} />}
-      OverImage={() => (tags ? OverImage({ badges: tags }) : null)}
+      OverImage={() => (
+        <OverImage
+          badges={tags}
+          status={status}
+          onLike={onLike}
+          onDislike={onDislike}
+        />
+      )}
     />
   );
 }

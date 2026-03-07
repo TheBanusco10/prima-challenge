@@ -1,3 +1,4 @@
+import { capitalize } from "es-toolkit";
 import type { Suggestion } from "../domain/models/Suggestion";
 
 interface Props {
@@ -7,7 +8,7 @@ interface Props {
 function SuggestionsTable({ suggestions }: Props) {
   return (
     <div className="overflow-x-auto rounded-box border border-base-content/5 bg-base-100">
-      <table className="table">
+      <table className="table table-zebra">
         <thead>
           <tr>
             <th></th>
@@ -21,7 +22,13 @@ function SuggestionsTable({ suggestions }: Props) {
             <tr key={meal.id}>
               <th>{index + 1}</th>
               <td>{meal.title}</td>
-              <td>{status}</td>
+              <td>
+                <span
+                  className={`badge ${status === "liked" ? "badge-success" : "badge-error"} badge-soft badge-sm`}
+                >
+                  {capitalize(status ?? "")}
+                </span>
+              </td>
               <td>{timestamp.toLocaleString()}</td>
             </tr>
           ))}

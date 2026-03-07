@@ -13,6 +13,7 @@ function App() {
   const [suggestion, setSuggestion] = useState<Suggestion | null>(null);
   const [recipesByCategory, setRecipesByCategory] = useState<MealPreview[]>([]);
   const [recipesByArea, setRecipesByArea] = useState<MealPreview[]>([]);
+  const [hasSearched, setHasSearched] = useState(false);
 
   const { getRecipesByArea } = useRecipeAreas();
   const { getRecipesByCategory } = useRecipeCategories();
@@ -24,6 +25,8 @@ function App() {
   }, []);
 
   const handleSubmit = async (formState: Record<string, any>) => {
+    setHasSearched(true);
+
     const { category, cuisine } = formState;
     const [recipesByCategoryResult, recipesByAreaResult] = await Promise.all([
       getRecipesByCategory(category),
@@ -38,12 +41,17 @@ function App() {
       recipesByArea: recipesByAreaResult,
     });
 
+    if (!randomMeal) {
+      setSuggestion(null);
+      return;
+    }
+
     const tags = [formatToLabel(category), formatToLabel(cuisine)];
 
     setSuggestion(
       new Suggestion({
         meal: randomMeal,
-        tags: tags,
+        tags,
         status:
           suggestions.find((s) => s.meal.id === randomMeal?.id)?.status || null,
         timestamp: new Date().toISOString(),
@@ -132,11 +140,9 @@ function App() {
   };
 
   return (
-    <main className="flex flex-col h-screen container mx-auto gap-8">
-      <section className="flex justify-center [&>section]:w-96">
+    <main className="flex flex-col lg:flex-row h-screen container mx-auto gap-8 pt-4">
+      <section className="flex flex-wrap max-md:justify-center flex-row lg:flex-col [&>section]:w-96 [&>section]:max-md:mx-auto [&>section]:px-0">
         <RecipeForm onSubmit={handleSubmit} />
-      </section>
-      <section className="flex items-center justify-center">
         {suggestion && (
           <div className="flex flex-col gap-4">
             <SuggestionCard
@@ -149,8 +155,11 @@ function App() {
             </button>
           </div>
         )}
+        {hasSearched && !suggestion && (
+          <p className="text-center">No results found</p>
+        )}
       </section>
-      <section className="flex flex-col gap-4 px-4">
+      <section className="flex flex-col flex-1 gap-4 px-4">
         <p className="text-lg font-semibold">Suggestions History</p>
         <SuggestionsTable suggestions={suggestions} />
       </section>
