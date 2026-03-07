@@ -1,12 +1,11 @@
 import CoreCard from "@/features/core/components/CoreCard";
 import { MdiThumbDownOutline } from "@/features/core/icons/ThumbDownOutline";
 import { ThumbUpOutline } from "@/features/core/icons/ThumbUpOutline";
-import type { MealPreview } from "../../recipes/domain/models/MealPreview";
+import type { Suggestion } from "../domain/models/Suggestion";
 import type { SuggestionStatus } from "../domain/types/suggestions";
 
 interface Props extends ActionsProps {
-  mealPreview: MealPreview;
-  tags?: string[];
+  suggestion: Suggestion;
 }
 
 interface ActionsProps {
@@ -15,12 +14,12 @@ interface ActionsProps {
   onDislike?: () => void;
 }
 
-function Image({ imageUrl, meal }: { imageUrl: string; meal: string }) {
+function Image({ imageUrl, title }: { imageUrl: string; title: string }) {
   return (
     <img
       className="w-full h-64 object-cover"
       src={`${imageUrl}/medium`}
-      alt={meal}
+      alt={title}
     />
   );
 }
@@ -48,12 +47,14 @@ function Actions({ status, onLike, onDislike }: ActionsProps) {
           <button
             className={`btn btn-circle btn-ghost ${liked ? "text-success" : ""}`}
             onClick={onLike}
+            disabled={liked}
           >
             <ThumbUpOutline width="1.3rem" height="1.3rem" />
           </button>
           <button
             className={`btn btn-circle btn-ghost ${disliked ? "text-error" : ""}`}
             onClick={onDislike}
+            disabled={disliked}
           >
             <MdiThumbDownOutline width="1.3rem" height="1.3rem" />
           </button>
@@ -66,22 +67,15 @@ function Actions({ status, onLike, onDislike }: ActionsProps) {
   );
 }
 
-function SuggestionCard({
-  mealPreview,
-  tags,
-  status,
-  onLike,
-  onDislike,
-}: Props) {
+function SuggestionCard({ suggestion, onLike, onDislike }: Props) {
+  const { meal, status, tags } = suggestion;
   return (
     <CoreCard
-      Title={() => mealPreview.meal}
+      Title={() => meal.title}
       Actions={() => (
         <Actions status={status} onLike={onLike} onDislike={onDislike} />
       )}
-      Image={() => (
-        <Image imageUrl={mealPreview.mealThumb} meal={mealPreview.meal} />
-      )}
+      Image={() => <Image imageUrl={meal.mealThumb} title={meal.title} />}
       OverImage={() => (tags ? OverImage({ badges: tags }) : null)}
     />
   );

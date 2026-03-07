@@ -11,7 +11,7 @@ export class MealPreview {
     this._idMeal = init.idMeal;
   }
 
-  get meal(): string {
+  get title(): string {
     return this._strMeal;
   }
 
@@ -26,7 +26,7 @@ export class MealPreview {
   toPrimitive() {
     return {
       idMeal: this.id,
-      strMeal: this.meal,
+      strMeal: this.title,
       strMealThumb: this.mealThumb,
     };
   }

@@ -16,5 +16,7 @@ export class UpdateSuggestionUseCase {
     );
 
     await this.suggestionsRepository.persist(updated);
+
+    return updated;
   }
 }

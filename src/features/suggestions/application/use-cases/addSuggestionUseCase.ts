@@ -11,6 +11,10 @@ export class AddSuggestionUseCase {
   async execute(suggestion: Suggestion) {
     const suggestions = await this.suggestionsRepository.getSuggestions();
 
-    await this.suggestionsRepository.persist([...suggestions, suggestion]);
+    const suggestionsToSave = [...suggestions, suggestion];
+
+    await this.suggestionsRepository.persist(suggestionsToSave);
+
+    return suggestionsToSave;
   }
 }
