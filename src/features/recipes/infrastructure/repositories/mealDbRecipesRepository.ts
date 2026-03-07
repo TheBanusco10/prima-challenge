@@ -3,7 +3,7 @@ import { Category } from "../../domain/models/Category";
 import { MealPreview } from "../../domain/models/MealPreview";
 import type { RecipesRepository } from "../../domain/repositories/recipesRepository";
 
-export class MealDbRecipeRepository implements RecipesRepository {
+export class MealDbRecipesRepository implements RecipesRepository {
   async getAllAreas() {
     const response = await fetch(
       "https://www.themealdb.com/api/json/v1/1/list.php?a=list",

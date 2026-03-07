@@ -1,11 +1,11 @@
 import { useState } from "react";
 import { GetAllAreasUseCase } from "../application/use-cases/getAllAreasUseCase";
-import { MealDbRecipeRepository } from "../infrastructure/repositories/mealDbRecipeRepository";
+import { MealDbRecipesRepository } from "../infrastructure/repositories/mealDbRecipesRepository";
 import type { Area } from "../domain/models/Area";
 import { GetRecipesByAreaUseCase } from "../application/use-cases/getRecipesByAreaUseCase";
 
 export default () => {
-  const recipeRepository = new MealDbRecipeRepository();
+  const recipeRepository = new MealDbRecipesRepository();
   const getAllAreasUseCase = new GetAllAreasUseCase(recipeRepository);
   const getRecipesByAreaUseCase = new GetRecipesByAreaUseCase(recipeRepository);
 
