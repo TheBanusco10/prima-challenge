@@ -1,9 +1,9 @@
-import type { RecipeRepository } from "../../domain/repositories/recipeRepository";
+import type { RecipesRepository } from "../../domain/repositories/recipesRepository";
 
 export class GetAllAreasUseCase {
-  private readonly recipeRepository: RecipeRepository;
+  private readonly recipeRepository: RecipesRepository;
 
-  constructor(recipeRepository: RecipeRepository) {
+  constructor(recipeRepository: RecipesRepository) {
     this.recipeRepository = recipeRepository;
   }
 

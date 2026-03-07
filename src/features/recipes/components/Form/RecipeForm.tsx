@@ -5,7 +5,11 @@ import { useEffect, useState } from "react";
 import useRecipeAreas from "../../hooks/useRecipeAreas";
 import useRecipeCategories from "../../hooks/useRecipeCategories";
 
-function RecipeForm() {
+interface Props {
+  onSubmit: (formState: Record<string, any>) => void;
+}
+
+function RecipeForm({ onSubmit }: Props) {
   const STEPS = [PreferencesStep, ConstraintsStep];
   const [currentStep, setCurrentStep] = useState(1);
   const [formState, setFormState] = useState({
@@ -22,8 +26,7 @@ function RecipeForm() {
   const isValidStep = stepValidation.get(currentStep) || false;
 
   useEffect(() => {
-    getAllAreas();
-    getAllCategories();
+    Promise.all([getAllAreas(), getAllCategories()]);
   }, []);
 
   useEffect(() => {
@@ -42,28 +45,27 @@ function RecipeForm() {
   };
 
   return (
-    <main>
-      <CoreForm
-        currentStep={currentStep}
-        totalSteps={STEPS.length}
-        isValidStep={isValidStep}
-        onNextStep={() => setCurrentStep(currentStep + 1)}
-        onPreviousStep={() => setCurrentStep(currentStep - 1)}
-      >
-        {STEPS.map(
-          (Step, index) =>
-            currentStep === index + 1 && (
-              <Step
-                key={index}
-                currentStep={currentStep}
-                formState={formState}
-                updateFormState={updateFormState}
-                validateStep={validateStep}
-              />
-            ),
-        )}
-      </CoreForm>
-    </main>
+    <CoreForm
+      currentStep={currentStep}
+      totalSteps={STEPS.length}
+      isValidStep={isValidStep}
+      onNextStep={() => setCurrentStep(currentStep + 1)}
+      onPreviousStep={() => setCurrentStep(currentStep - 1)}
+      onSubmit={() => onSubmit(formState)}
+    >
+      {STEPS.map(
+        (Step, index) =>
+          currentStep === index + 1 && (
+            <Step
+              key={index}
+              currentStep={currentStep}
+              formState={formState}
+              updateFormState={updateFormState}
+              validateStep={validateStep}
+            />
+          ),
+      )}
+    </CoreForm>
   );
 }
 

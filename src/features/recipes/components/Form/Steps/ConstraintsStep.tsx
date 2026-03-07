@@ -11,7 +11,7 @@ function ConstraintsStep({
   const mappedCategories =
     formState.allCategories?.map((category: Category) => ({
       label: category.name,
-      value: category.id,
+      value: category.name.toLowerCase(),
     })) || [];
 
   const handleChange = (value: string) => {

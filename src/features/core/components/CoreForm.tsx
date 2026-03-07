@@ -1,18 +1,20 @@
 interface Props {
-  onNextStep?: () => void;
-  onPreviousStep?: () => void;
   totalSteps: number;
   currentStep?: number;
   isValidStep?: boolean;
+  onNextStep?: () => void;
+  onPreviousStep?: () => void;
+  onSubmit?: () => void;
 }
 
 function CoreForm({
-  onNextStep,
-  onPreviousStep,
   children,
   totalSteps,
   isValidStep = true,
   currentStep = 1,
+  onNextStep,
+  onPreviousStep,
+  onSubmit,
 }: React.PropsWithChildren<Props>) {
   const canGoNext = currentStep < (totalSteps || 1) && isValidStep;
   const isFinalStep = currentStep === (totalSteps || 1);
@@ -39,7 +41,11 @@ function CoreForm({
           </button>
         )}
         {isFinalStep && (
-          <button className="btn btn-primary" disabled={!isValidStep}>
+          <button
+            className="btn btn-primary"
+            disabled={!isValidStep}
+            onClick={onSubmit}
+          >
             Send
           </button>
         )}
