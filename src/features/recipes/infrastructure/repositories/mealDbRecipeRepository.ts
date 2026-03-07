@@ -1,8 +1,9 @@
 import { Area } from "../../domain/models/Area";
 import { Category } from "../../domain/models/Category";
-import type { RecipeRepository } from "../../domain/repositories/recipeRepository";
+import { MealPreview } from "../../domain/models/MealPreview";
+import type { RecipesRepository } from "../../domain/repositories/recipesRepository";
 
-export class MealDbRecipeRepository implements RecipeRepository {
+export class MealDbRecipeRepository implements RecipesRepository {
   async getAllAreas() {
     const response = await fetch(
       "https://www.themealdb.com/api/json/v1/1/list.php?a=list",
@@ -21,5 +22,25 @@ export class MealDbRecipeRepository implements RecipeRepository {
     const data = await response.json();
 
     return data.categories?.map((category: any) => new Category(category));
+  }
+
+  async getRecipesByArea(area: string) {
+    const response = await fetch(
+      `https://www.themealdb.com/api/json/v1/1/filter.php?a=${area}`,
+    );
+
+    const data = await response.json();
+
+    return data.meals?.map((meal: any) => new MealPreview(meal));
+  }
+
+  async getRecipesByCategory(category: string) {
+    const response = await fetch(
+      `https://www.themealdb.com/api/json/v1/1/filter.php?c=${category}`,
+    );
+
+    const data = await response.json();
+
+    return data.meals?.map((meal: any) => new MealPreview(meal));
   }
 }
