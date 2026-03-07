@@ -49,13 +49,13 @@ function Actions({ status, onLike, onDislike }: ActionsProps) {
             className={`btn btn-circle btn-ghost ${liked ? "text-success" : ""}`}
             onClick={onLike}
           >
-            <ThumbUpOutline width="1.5rem" height="1.5rem" />
+            <ThumbUpOutline width="1.3rem" height="1.3rem" />
           </button>
           <button
             className={`btn btn-circle btn-ghost ${disliked ? "text-error" : ""}`}
             onClick={onDislike}
           >
-            <MdiThumbDownOutline width="1.5rem" height="1.5rem" />
+            <MdiThumbDownOutline width="1.3rem" height="1.3rem" />
           </button>
         </div>
       </div>

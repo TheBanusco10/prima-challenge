@@ -19,7 +19,7 @@ function CoreSelect({
     <fieldset className="fieldset">
       <legend className="fieldset-legend">{label}</legend>
       <select
-        className="select"
+        className="w-full select"
         defaultValue={defaultValue}
         disabled={disabled}
         onChange={(e) => onChange?.(e.target.value)}

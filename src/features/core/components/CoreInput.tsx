@@ -21,7 +21,7 @@ function CoreInput({
       <input
         type={type}
         placeholder={placeholder}
-        className="input input-md"
+        className="w-full input input-md"
         defaultValue={defaultValue}
         disabled={disabled}
         onChange={(e) => onChange?.(e.target.value)}
