@@ -4,28 +4,31 @@ import { useState } from "react";
 import type { MealDetailed } from "../domain/models/MealDetailed";
 import useMeals from "../hooks/useMeals";
 import MealCard from "./MealCard";
+import MealSkeletonCard from "./MealSkeletonCard";
 
 const MAX_MEALS_TO_SHOW = 5;
 
 function SearchMealsSection() {
-  const [searchedMeals, setSearchedMeals] = useState<MealDetailed[]>([]);
-  const { getMealsByName } = useMeals();
+  const [searchedMeals, setSearchedMeals] = useState<MealDetailed[] | null>(
+    null,
+  );
+  const { isFetching, getMealsByName } = useMeals();
 
   const getMealsDebounce = debounce(async (name: string) => {
     const meals = await getMealsByName(name);
 
-    setSearchedMeals(meals.slice(0, MAX_MEALS_TO_SHOW));
+    setSearchedMeals(meals?.slice(0, MAX_MEALS_TO_SHOW) ?? []);
   }, 500);
 
   const handleGetMeals = async (name: string) => {
     if (!name.length) {
-      setSearchedMeals([]);
+      setSearchedMeals(null);
       return;
     }
 
     if (name.length <= 3) return;
 
-    await getMealsDebounce(name);
+    getMealsDebounce(name);
   };
 
   return (
@@ -37,9 +40,11 @@ function SearchMealsSection() {
         onChange={(value: string) => handleGetMeals(value)}
       />
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
-        {searchedMeals.map((meal) => (
-          <MealCard key={meal.id} meal={meal} />
-        ))}
+        {isFetching &&
+          Array.from({ length: 4 }).map((_, i) => <MealSkeletonCard key={i} />)}
+        {!isFetching &&
+          searchedMeals?.map((meal) => <MealCard key={meal.id} meal={meal} />)}
+        {!isFetching && searchedMeals?.length === 0 && <p>No results found</p>}
       </div>
     </div>
   );

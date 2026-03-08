@@ -2,11 +2,62 @@ import { useState } from "react";
 import { Suggestion } from "../domain/models/Suggestion";
 import type { MealPreview } from "@/features/meals/domain/models/MealPreview";
 import useSuggestions from "./useSuggestions";
+import useRecipeFormat from "@/features/recipes/hooks/useRecipeFormat";
+import useRecipeAreas from "@/features/recipes/hooks/useRecipeAreas";
+import useRecipeCategories from "@/features/recipes/hooks/useRecipeCategories";
 
 export default () => {
   const [suggestion, setSuggestion] = useState<Suggestion | null>(null);
+  const [isFetching, setIsFeching] = useState(false);
+  const [hasSearched, setHasSearched] = useState(false);
 
   const { saveSuggestion } = useSuggestions();
+  const { formatToLabel } = useRecipeFormat();
+  const { recipesByArea, getRecipesByArea } = useRecipeAreas();
+  const { recipesByCategory, getRecipesByCategory } = useRecipeCategories();
+
+  const getSuggestion = async (params: {
+    formState: Record<string, any>;
+    suggestions: Suggestion[];
+  }) => {
+    setIsFeching(true);
+
+    const {
+      formState: { category, cuisine },
+      suggestions,
+    } = params;
+
+    const [recipesByCategoryResult, recipesByAreaResult] = await Promise.all([
+      getRecipesByCategory(category),
+      getRecipesByArea(cuisine),
+    ]);
+
+    const randomMeal = getRandomMeal({
+      recipesByCategory: recipesByCategoryResult,
+      recipesByArea: recipesByAreaResult,
+    });
+
+    if (!randomMeal) {
+      setSuggestion(null);
+      setIsFeching(false);
+      setHasSearched(true);
+      return;
+    }
+
+    const tags = [formatToLabel(category), formatToLabel(cuisine)];
+
+    setSuggestion(
+      new Suggestion({
+        meal: randomMeal,
+        tags,
+        status:
+          suggestions.find((s) => s.meal.id === randomMeal?.id)?.status || null,
+        timestamp: new Date().toISOString(),
+      }),
+    );
+    setIsFeching(false);
+    setHasSearched(false);
+  };
 
   const likeSuggestion = () => {
     if (!suggestion) return;
@@ -40,14 +91,12 @@ export default () => {
     setSuggestion(updatedSuggestion);
   };
 
-  const suggestAgain = (params: {
-    suggestions: Suggestion[];
-    recipesByCategory: MealPreview[];
-    recipesByArea: MealPreview[];
-  }) => {
+  const suggestAgain = (params: { suggestions: Suggestion[] }) => {
     if (!suggestion) return;
 
-    const { recipesByCategory, recipesByArea, suggestions } = params;
+    setIsFeching(true);
+
+    const { suggestions } = params;
 
     const randomMeal = getRandomMeal({
       recipesByCategory,
@@ -63,6 +112,8 @@ export default () => {
         timestamp: new Date().toISOString(),
       }),
     );
+    setIsFeching(false);
+    setHasSearched(false);
   };
 
   const getRandomMeal = (params: {
@@ -96,7 +147,10 @@ export default () => {
 
   return {
     suggestion,
+    isFetching,
+    hasSearched,
     setSuggestion,
+    getSuggestion,
     likeSuggestion,
     dislikeSuggestion,
     suggestAgain,

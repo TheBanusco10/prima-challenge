@@ -1,27 +1,20 @@
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
+import SearchMealsSection from "./features/meals/components/SearchMealsSection";
 import RecipeForm from "./features/recipes/components/Form/RecipeForm";
-import { MealPreview } from "./features/meals/domain/models/MealPreview";
-import useRecipeAreas from "./features/recipes/hooks/useRecipeAreas";
-import useRecipeCategories from "./features/recipes/hooks/useRecipeCategories";
-import useRecipeFormat from "./features/recipes/hooks/useRecipeFormat";
 import SuggestionCard from "./features/suggestions/components/SuggestionCard";
 import SuggestionsTable from "./features/suggestions/components/SuggestionsTable";
-import { Suggestion } from "./features/suggestions/domain/models/Suggestion";
-import useSuggestions from "./features/suggestions/hooks/useSuggestions";
-import SearchMealsSection from "./features/meals/components/SearchMealsSection";
 import useSuggestion from "./features/suggestions/hooks/useSuggestion";
+import useSuggestions from "./features/suggestions/hooks/useSuggestions";
+import SuggestionSkeletonCard from "./features/suggestions/components/SuggestionSkeletonCard";
 
 function App() {
-  const [hasSearched, setHasSearched] = useState(false);
-
-  const { recipesByArea, getRecipesByArea } = useRecipeAreas();
-  const { recipesByCategory, getRecipesByCategory } = useRecipeCategories();
-  const { formatToLabel } = useRecipeFormat();
   const { suggestions, getSuggestions } = useSuggestions();
+
   const {
     suggestion,
-    setSuggestion,
-    getRandomMeal,
+    isFetching,
+    hasSearched,
+    getSuggestion,
     likeSuggestion,
     dislikeSuggestion,
     suggestAgain,
@@ -31,44 +24,19 @@ function App() {
     getSuggestions();
   }, []);
 
-  const handleSubmit = async (formState: Record<string, any>) => {
-    setHasSearched(true);
-
-    const { category, cuisine } = formState;
-
-    const [recipesByCategoryResult, recipesByAreaResult] = await Promise.all([
-      getRecipesByCategory(category),
-      getRecipesByArea(cuisine),
-    ]);
-
-    const randomMeal = getRandomMeal({
-      recipesByCategory: recipesByCategoryResult,
-      recipesByArea: recipesByAreaResult,
-    });
-
-    if (!randomMeal) {
-      setSuggestion(null);
-      return;
-    }
-
-    const tags = [formatToLabel(category), formatToLabel(cuisine)];
-
-    setSuggestion(
-      new Suggestion({
-        meal: randomMeal,
-        tags,
-        status:
-          suggestions.find((s) => s.meal.id === randomMeal?.id)?.status || null,
-        timestamp: new Date().toISOString(),
-      }),
-    );
-  };
-
   return (
     <main className="flex flex-col lg:flex-row h-screen container mx-auto gap-8 pt-4">
       <section className="flex flex-wrap max-md:justify-center flex-row lg:flex-col [&>section]:w-96 [&>section]:max-md:mx-auto [&>section]:lg:px-0">
-        <RecipeForm onSubmit={handleSubmit} />
-        {suggestion && (
+        <RecipeForm
+          onSubmit={(formState) =>
+            getSuggestion({
+              formState,
+              suggestions,
+            })
+          }
+        />
+        {isFetching && <SuggestionSkeletonCard />}
+        {!isFetching && suggestion && (
           <div className="flex flex-col gap-4">
             <SuggestionCard
               suggestion={suggestion}
@@ -77,19 +45,13 @@ function App() {
             />
             <button
               className="btn btn-outline"
-              onClick={() =>
-                suggestAgain({
-                  recipesByArea,
-                  recipesByCategory,
-                  suggestions,
-                })
-              }
+              onClick={() => suggestAgain({ suggestions })}
             >
               New Idea
             </button>
           </div>
         )}
-        {hasSearched && !suggestion && (
+        {!isFetching && hasSearched && !suggestion && (
           <p className="text-center">No results found</p>
         )}
       </section>
