@@ -1,31 +1,29 @@
-import { useState } from "react";
-import { Suggestion } from "../domain/models/Suggestion";
 import type { MealPreview } from "@/features/meals/domain/models/MealPreview";
-import useSuggestions from "./useSuggestions";
-import useRecipeFormat from "@/features/recipes/hooks/useRecipeFormat";
 import useRecipeAreas from "@/features/recipes/hooks/useRecipeAreas";
 import useRecipeCategories from "@/features/recipes/hooks/useRecipeCategories";
+import useRecipeFormat from "@/features/recipes/hooks/useRecipeFormat";
+import { useEffect, useState } from "react";
+import { Suggestion } from "../domain/models/Suggestion";
+import useSuggestions from "./useSuggestions";
 
 export default () => {
   const [suggestion, setSuggestion] = useState<Suggestion | null>(null);
-  const [isFetching, setIsFeching] = useState(false);
+  const [isFetching, setIsFetching] = useState(false);
   const [hasSearched, setHasSearched] = useState(false);
 
-  const { saveSuggestion } = useSuggestions();
+  const { suggestions, getSuggestions, saveSuggestion } = useSuggestions();
   const { formatToLabel } = useRecipeFormat();
   const { recipesByArea, getRecipesByArea } = useRecipeAreas();
   const { recipesByCategory, getRecipesByCategory } = useRecipeCategories();
 
-  const getSuggestion = async (params: {
-    formState: Record<string, any>;
-    suggestions: Suggestion[];
-  }) => {
-    setIsFeching(true);
+  useEffect(() => {
+    getSuggestions();
+  }, []);
 
-    const {
-      formState: { category, cuisine },
-      suggestions,
-    } = params;
+  const getSuggestion = async (formState: Record<string, any>) => {
+    setIsFetching(true);
+
+    const { category, cuisine } = formState;
 
     const [recipesByCategoryResult, recipesByAreaResult] = await Promise.all([
       getRecipesByCategory(category),
@@ -39,7 +37,7 @@ export default () => {
 
     if (!randomMeal) {
       setSuggestion(null);
-      setIsFeching(false);
+      setIsFetching(false);
       setHasSearched(true);
       return;
     }
@@ -55,8 +53,8 @@ export default () => {
         timestamp: new Date().toISOString(),
       }),
     );
-    setIsFeching(false);
-    setHasSearched(false);
+    setIsFetching(false);
+    setHasSearched(true);
   };
 
   const likeSuggestion = () => {
@@ -91,12 +89,10 @@ export default () => {
     setSuggestion(updatedSuggestion);
   };
 
-  const suggestAgain = (params: { suggestions: Suggestion[] }) => {
+  const suggestAgain = () => {
     if (!suggestion) return;
 
-    setIsFeching(true);
-
-    const { suggestions } = params;
+    setIsFetching(true);
 
     const randomMeal = getRandomMeal({
       recipesByCategory,
@@ -112,34 +108,30 @@ export default () => {
         timestamp: new Date().toISOString(),
       }),
     );
-    setIsFeching(false);
+    setIsFetching(false);
     setHasSearched(false);
   };
 
-  const getRandomMeal = (params: {
+  const getRandomMeal = ({
+    recipesByCategory,
+    recipesByArea,
+  }: {
     recipesByCategory: MealPreview[];
     recipesByArea: MealPreview[];
   }) => {
-    const { recipesByCategory, recipesByArea } = params;
-
     const areaIds = new Set(recipesByArea.map((recipe) => recipe.id));
 
     const results = recipesByCategory.filter((recipe) =>
       areaIds.has(recipe.id),
     );
 
-    if (!results.length) {
-      return null;
-    }
+    if (!results.length) return null;
 
-    let randomIndex = Math.floor(Math.random() * results.length);
+    let randomMeal = results[Math.floor(Math.random() * results.length)];
 
-    let randomMeal = results[randomIndex];
-
-    // If the random meal is the same as the current suggestion, get the next one
-    if (randomMeal.id === suggestion?.meal.id) {
-      randomIndex = (randomIndex + 1) % results.length;
-      randomMeal = results[randomIndex];
+    if (randomMeal.id === suggestion?.meal.id && results.length > 1) {
+      randomMeal =
+        results.find((r) => r.id !== suggestion.meal.id) ?? randomMeal;
     }
 
     return randomMeal;
@@ -147,6 +139,7 @@ export default () => {
 
   return {
     suggestion,
+    suggestions,
     isFetching,
     hasSearched,
     setSuggestion,
@@ -154,6 +147,5 @@ export default () => {
     likeSuggestion,
     dislikeSuggestion,
     suggestAgain,
-    getRandomMeal,
   };
 };

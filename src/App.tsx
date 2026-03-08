@@ -1,16 +1,13 @@
-import { useEffect } from "react";
+import SkeletonCardLayout from "./features/core/components/Cards/SkeletonCardLayout";
 import SearchMealsSection from "./features/meals/components/SearchMealsSection";
 import RecipeForm from "./features/recipes/components/Form/RecipeForm";
 import SuggestionCard from "./features/suggestions/components/SuggestionCard";
 import SuggestionsTable from "./features/suggestions/components/SuggestionsTable";
 import useSuggestion from "./features/suggestions/hooks/useSuggestion";
-import useSuggestions from "./features/suggestions/hooks/useSuggestions";
-import SuggestionSkeletonCard from "./features/suggestions/components/SuggestionSkeletonCard";
 
 function App() {
-  const { suggestions, getSuggestions } = useSuggestions();
-
   const {
+    suggestions,
     suggestion,
     isFetching,
     hasSearched,
@@ -20,22 +17,11 @@ function App() {
     suggestAgain,
   } = useSuggestion();
 
-  useEffect(() => {
-    getSuggestions();
-  }, []);
-
   return (
-    <main className="flex flex-col lg:flex-row h-screen container mx-auto gap-8 pt-4">
+    <main className="flex flex-col lg:flex-row container mx-auto gap-8 pt-4">
       <section className="flex flex-wrap max-md:justify-center flex-row lg:flex-col [&>section]:w-96 [&>section]:max-md:mx-auto [&>section]:lg:px-0">
-        <RecipeForm
-          onSubmit={(formState) =>
-            getSuggestion({
-              formState,
-              suggestions,
-            })
-          }
-        />
-        {isFetching && <SuggestionSkeletonCard />}
+        <RecipeForm onSubmit={getSuggestion} />
+        {isFetching && <SkeletonCardLayout />}
         {!isFetching && suggestion && (
           <div className="flex flex-col gap-4">
             <SuggestionCard
@@ -43,10 +29,7 @@ function App() {
               onLike={likeSuggestion}
               onDislike={dislikeSuggestion}
             />
-            <button
-              className="btn btn-outline"
-              onClick={() => suggestAgain({ suggestions })}
-            >
+            <button className="btn btn-outline" onClick={suggestAgain}>
               New Idea
             </button>
           </div>
