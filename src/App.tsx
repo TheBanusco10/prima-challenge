@@ -8,6 +8,7 @@ import SuggestionCard from "./features/suggestions/components/SuggestionCard";
 import SuggestionsTable from "./features/suggestions/components/SuggestionsTable";
 import { Suggestion } from "./features/suggestions/domain/models/Suggestion";
 import useSuggestions from "./features/suggestions/hooks/useSuggestions";
+import SearchMealsSection from "./features/meals/components/SearchMealsSection";
 
 function App() {
   const [suggestion, setSuggestion] = useState<Suggestion | null>(null);
@@ -160,8 +161,14 @@ function App() {
         )}
       </section>
       <section className="flex flex-col flex-1 gap-4 px-4">
-        <p className="text-lg font-semibold">Suggestions History</p>
-        <SuggestionsTable suggestions={suggestions} />
+        <div>
+          <p className="text-lg font-semibold mb-2">Suggestions History</p>
+          <SuggestionsTable suggestions={suggestions} />
+        </div>
+        <div>
+          <p className="text-lg font-semibold mb-2">Search Meals</p>
+          <SearchMealsSection />
+        </div>
       </section>
     </main>
   );

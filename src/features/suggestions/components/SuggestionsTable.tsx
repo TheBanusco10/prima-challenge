@@ -7,7 +7,7 @@ interface Props {
 
 function SuggestionsTable({ suggestions }: Props) {
   return (
-    <div className="overflow-x-auto rounded-box border border-base-content/5 bg-base-100">
+    <div className="h-72 overflow-y-auto overflow-x-auto rounded-box border border-base-content/5 bg-base-100">
       <table className="table table-zebra">
         <thead>
           <tr>

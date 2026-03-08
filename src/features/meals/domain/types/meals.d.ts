@@ -7,4 +7,5 @@ export interface MealPreviewParams {
 export interface MealDetailedParams extends MealPreviewParams {
   strCategory: string;
   strArea: string;
+  strSource: string;
 }
