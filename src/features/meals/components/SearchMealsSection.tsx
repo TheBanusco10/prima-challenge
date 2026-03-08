@@ -1,10 +1,10 @@
+import SkeletonCardLayout from "@/features/core/components/Cards/SkeletonCardLayout";
 import CoreInput from "@/features/core/components/CoreInput";
 import { debounce } from "es-toolkit";
 import { useState } from "react";
 import type { MealDetailed } from "../domain/models/MealDetailed";
 import useMeals from "../hooks/useMeals";
 import MealCard from "./MealCard";
-import MealSkeletonCard from "./MealSkeletonCard";
 
 const MAX_MEALS_TO_SHOW = 5;
 
@@ -41,7 +41,7 @@ function SearchMealsSection() {
       />
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
         {isFetching &&
-          Array.from({ length: 4 }).map((_, i) => <MealSkeletonCard key={i} />)}
+          Array.from({ length: 4 }).map((_, i) => <SkeletonCardLayout key={i} />)}
         {!isFetching &&
           searchedMeals?.map((meal) => <MealCard key={meal.id} meal={meal} />)}
         {!isFetching && searchedMeals?.length === 0 && <p>No results found</p>}

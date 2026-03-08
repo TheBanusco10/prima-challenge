@@ -1,6 +1,6 @@
 import CoreCard from "@/features/core/components/CoreCard";
 
-function MealSkeletonCard() {
+function SkeletonCardLayout() {
   return (
     <CoreCard
       additionalClasses="w-auto [&_.card-body]:p-0 [&_.card-body]:justify-between [&_.card-title]:p-6"
@@ -15,4 +15,4 @@ function MealSkeletonCard() {
   );
 }
 
-export default MealSkeletonCard;
+export default SkeletonCardLayout;
