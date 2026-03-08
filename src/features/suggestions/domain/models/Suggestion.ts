@@ -1,9 +1,9 @@
+import { MealPreview } from "@/features/meals/domain/models/MealPreview";
 import type {
   SuggestionParams,
   SuggestionPrimitive,
   SuggestionStatus,
 } from "../types/suggestions";
-import { MealPreview } from "../../../recipes/domain/models/MealPreview";
 
 export class Suggestion {
   private readonly _meal: MealPreview;

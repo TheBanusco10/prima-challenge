@@ -1,4 +1,4 @@
-import type { MealPreviewParams } from "../types/meals-response";
+import type { MealPreviewParams } from "../types/meals";
 
 export class MealPreview {
   private readonly _strMeal: string;

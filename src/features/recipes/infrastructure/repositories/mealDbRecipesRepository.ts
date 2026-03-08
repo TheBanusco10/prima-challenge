@@ -1,6 +1,6 @@
 import { Area } from "../../domain/models/Area";
 import { Category } from "../../domain/models/Category";
-import { MealPreview } from "../../domain/models/MealPreview";
+import { MealPreview } from "@/features/meals/domain/models/MealPreview";
 import type { RecipesRepository } from "../../domain/repositories/recipesRepository";
 
 export class MealDbRecipesRepository implements RecipesRepository {

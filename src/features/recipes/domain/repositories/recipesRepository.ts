@@ -1,6 +1,6 @@
+import type { MealPreview } from "@/features/meals/domain/models/MealPreview";
 import type { Area } from "../models/Area";
 import type { Category } from "../models/Category";
-import type { MealPreview } from "../models/MealPreview";
 
 export interface RecipesRepository {
   getAllAreas(): Promise<Area[]>;

@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import RecipeForm from "./features/recipes/components/Form/RecipeForm";
-import { MealPreview } from "./features/recipes/domain/models/MealPreview";
+import { MealPreview } from "./features/meals/domain/models/MealPreview";
 import useRecipeAreas from "./features/recipes/hooks/useRecipeAreas";
 import useRecipeCategories from "./features/recipes/hooks/useRecipeCategories";
 import useRecipeFormat from "./features/recipes/hooks/useRecipeFormat";
