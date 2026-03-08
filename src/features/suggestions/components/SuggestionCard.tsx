@@ -6,7 +6,7 @@ import type { SuggestionStatus } from "../domain/types/suggestions";
 import { ThumbUp } from "@/features/core/icons/ThumbUp";
 import { ThumbDown } from "@/features/core/icons/ThumbDown";
 
-interface Props extends OverImageProps {
+interface Props extends Omit<OverImageProps, "badges"> {
   suggestion: Suggestion;
 }
 

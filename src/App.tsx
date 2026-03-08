@@ -141,7 +141,7 @@ function App() {
 
   return (
     <main className="flex flex-col lg:flex-row h-screen container mx-auto gap-8 pt-4">
-      <section className="flex flex-wrap max-md:justify-center flex-row lg:flex-col [&>section]:w-96 [&>section]:max-md:mx-auto [&>section]:px-0">
+      <section className="flex flex-wrap max-md:justify-center flex-row lg:flex-col [&>section]:w-96 [&>section]:max-md:mx-auto [&>section]:lg:px-0">
         <RecipeForm onSubmit={handleSubmit} />
         {suggestion && (
           <div className="flex flex-col gap-4">
