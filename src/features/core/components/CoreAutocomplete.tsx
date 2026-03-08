@@ -8,6 +8,7 @@ interface Item {
 }
 
 interface Props {
+  id: string;
   label: string;
   items: Item[];
   placeholder?: string;
@@ -18,6 +19,7 @@ interface Props {
 }
 
 function CoreAutocomplete({
+  id,
   label,
   items,
   placeholder,
@@ -80,6 +82,7 @@ function CoreAutocomplete({
   return (
     <div ref={containerRef}>
       <CoreInput
+        id={id}
         label={label}
         placeholder={placeholder}
         disabled={disabled}

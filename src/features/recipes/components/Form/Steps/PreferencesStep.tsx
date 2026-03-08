@@ -23,6 +23,7 @@ function PreferencesStep({
   return (
     <CoreFormStep>
       <CoreAutocomplete
+        id="cuisine-input"
         label="Cuisine/Area"
         placeholder="Select a cuisine"
         value={formState.cuisine}

@@ -1,4 +1,5 @@
 interface Props {
+  id: string;
   label: string;
   placeholder?: string;
   type?: string;
@@ -11,6 +12,7 @@ interface Props {
 }
 
 function CoreInput({
+  id,
   label,
   placeholder = "",
   type = "text",
@@ -22,9 +24,12 @@ function CoreInput({
   onBlur,
 }: Props) {
   return (
-    <label className="floating-label">
-      <span>{label}</span>
+    <div className="flex flex-col gap-1">
+      <label htmlFor={id} className="label">
+        {label}
+      </label>
       <input
+        id={id}
         type={type}
         placeholder={placeholder}
         className="w-full input input-md"
@@ -35,7 +40,7 @@ function CoreInput({
         onClick={onClick}
         onBlur={onBlur}
       />
-    </label>
+    </div>
   );
 }
 
