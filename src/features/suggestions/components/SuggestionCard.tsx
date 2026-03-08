@@ -68,7 +68,7 @@ function SuggestionCard({ suggestion, onLike, onDislike }: Props) {
       badges={tags}
       additionalClasses="[&_.card-body]:p-0 [&_.card-title]:p-6"
       actions={
-        <a className="w-full btn btn-primary btn-soft rounded-tl-none rounded-tr-none">
+        <a className="w-full btn btn-primary btn-soft rounded-tl-none rounded-tr-none opacity-50 pointer-events-none">
           See recipe
         </a>
       }
