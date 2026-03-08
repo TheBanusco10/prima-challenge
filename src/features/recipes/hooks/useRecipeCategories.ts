@@ -3,14 +3,16 @@ import { GetAllCategoriesUseCase } from "../application/use-cases/getAllCategori
 import { MealDbRecipesRepository } from "../infrastructure/repositories/mealDbRecipesRepository";
 import type { Category } from "../domain/models/Category";
 import { GetRecipesByCategoryUseCase } from "../application/use-cases/getRecipesByCategoryUseCase";
+import type { MealPreview } from "@/features/meals/domain/models/MealPreview";
+
+const recipeRepository = new MealDbRecipesRepository();
+const getAllCategoriesUseCase = new GetAllCategoriesUseCase(recipeRepository);
+const getRecipesByCategoryUseCase = new GetRecipesByCategoryUseCase(
+  recipeRepository,
+);
 
 export default () => {
-  const recipeRepository = new MealDbRecipesRepository();
-  const getAllCategoriesUseCase = new GetAllCategoriesUseCase(recipeRepository);
-  const getRecipesByCategoryUseCase = new GetRecipesByCategoryUseCase(
-    recipeRepository,
-  );
-
+  const [recipesByCategory, setRecipesByCategory] = useState<MealPreview[]>([]);
   const [allCategories, setAllCategories] = useState<Category[]>([]);
   const [fetching, setFetching] = useState(false);
 
@@ -23,12 +25,16 @@ export default () => {
 
   const getRecipesByCategory = async (category: string) => {
     const recipes = await getRecipesByCategoryUseCase.execute(category);
+
+    setRecipesByCategory(recipes);
+
     return recipes;
   };
 
   return {
     allCategories,
     fetching,
+    recipesByCategory,
     getAllCategories,
     getRecipesByCategory,
   };

@@ -5,17 +5,15 @@ import { UpdateSuggestionUseCase } from "../application/use-cases/updateSuggesti
 import type { Suggestion } from "../domain/models/Suggestion";
 import { LocalStorageSuggestionsRepository } from "../infrastructure/repositories/localStorageSuggestionsRepository";
 
+const suggestionsRepository = new LocalStorageSuggestionsRepository();
+
+const getSuggestionsUseCase = new GetSuggestionsUseCase(suggestionsRepository);
+const addSuggestionUseCase = new AddSuggestionUseCase(suggestionsRepository);
+const updateSuggestionUseCase = new UpdateSuggestionUseCase(
+  suggestionsRepository,
+);
+
 export default () => {
-  const suggestionsRepository = new LocalStorageSuggestionsRepository();
-
-  const getSuggestionsUseCase = new GetSuggestionsUseCase(
-    suggestionsRepository,
-  );
-  const addSuggestionUseCase = new AddSuggestionUseCase(suggestionsRepository);
-  const updateSuggestionUseCase = new UpdateSuggestionUseCase(
-    suggestionsRepository,
-  );
-
   const [suggestions, setSuggestions] = useState<Suggestion[]>([]);
 
   const getSuggestions = async () => {
