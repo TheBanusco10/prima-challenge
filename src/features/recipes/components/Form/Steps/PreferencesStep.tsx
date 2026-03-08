@@ -1,5 +1,5 @@
+import CoreAutocomplete from "@/features/core/components/CoreAutocomplete";
 import CoreFormStep from "@/features/core/components/CoreFormStep";
-import CoreSelect from "@/features/core/components/CoreSelect";
 import type { Area } from "@/features/recipes/domain/models/Area";
 
 function PreferencesStep({
@@ -22,10 +22,11 @@ function PreferencesStep({
 
   return (
     <CoreFormStep>
-      <CoreSelect
+      <CoreAutocomplete
         label="Cuisine/Area"
-        options={mappedAllAreas}
-        defaultValue={formState.cuisine}
+        placeholder="Select a cuisine"
+        value={formState.cuisine}
+        items={mappedAllAreas}
         onChange={handleChange}
       />
     </CoreFormStep>
