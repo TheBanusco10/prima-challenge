@@ -18,6 +18,7 @@ function Image({ imageUrl, title }: { imageUrl: string; title: string }) {
     />
   );
 }
+
 function OverImage({ badges }: OverImageProps) {
   return (
     <section className="absolute bottom-2 left-2 flex gap-2">
@@ -30,11 +31,14 @@ function OverImage({ badges }: OverImageProps) {
   );
 }
 
-function Actions() {
+function Actions({ link }: { link: string }) {
+  const disabled = !link.length;
+
   return (
     <a
-      href="#"
-      className="w-full btn btn-primary btn-soft rounded-tl-none rounded-tr-none"
+      className={`w-full btn btn-primary btn-soft rounded-tl-none rounded-tr-none ${disabled ? "opacity-50 pointer-events-none" : ""}`}
+      target="_blank"
+      href={link}
     >
       See recipe
     </a>
@@ -42,15 +46,15 @@ function Actions() {
 }
 
 function MealCard({ meal }: Props) {
-  const { title, mealThumb, category, area } = meal;
+  const { title, mealThumb, category, area, link } = meal;
 
   const tags = [area, category];
 
   return (
     <CoreCard
-      additionalClasses="[&_.card-body]:p-0 [&_.card-title]:p-6"
+      additionalClasses="w-auto [&_.card-body]:p-0 [&_.card-body]:justify-between [&_.card-title]:p-6"
       Title={() => title}
-      Actions={() => <Actions />}
+      Actions={() => <Actions link={link} />}
       Image={() => <Image imageUrl={mealThumb} title={title} />}
       OverImage={() => <OverImage badges={tags} />}
     />

@@ -31,11 +31,12 @@ function SearchMealsSection() {
   return (
     <div className="flex flex-col gap-4">
       <CoreInput
+        id="meal-name-input"
         label="Meal name"
         placeholder="Search meals by name"
         onChange={(value: string) => handleGetMeals(value)}
       />
-      <div className="grid grid-cols-1 lg:grid-cols-3">
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
         {searchedMeals.map((meal) => (
           <MealCard key={meal.id} meal={meal} />
         ))}
