@@ -19,6 +19,11 @@
 ### External Libraries
 
 - **es-toolkit**: For utility functions and helpers. Lightweight alternative to Lodash.
+- **vitest**: For unit testing.
+
+### Meals
+
+All cards have an image placeholder (placeholder.svg) in case the image from API is not available or broken.
 
 ### Suggestions
 
@@ -33,6 +38,16 @@ For loading sections, I have used skeleton loaders to improve the perceived perf
 ### Search meals by name
 
 Wrapped the get function inside a debounce one to avoid fetching the API too many times when user is typing.
+
+### Testing
+
+Simple unit tests have been created for some core components.
+
+### Errors
+
+`MealsApiError` and `InvalidMealsNameLengthError` have been created to handle application's errors in a more structured way. Error messages are not exposed to the user to avoid adding more complexity to this challenge. Also, by creating errors in this way, we can filter them using `instanceof` operator to handle them differently if needed.
+
+Rest of use cases and repositories do not have error handling to avoid overcomplicating the challenge, but they can be implemented following the same pattern.
 
 ## Instructions
 
@@ -51,9 +66,10 @@ pnpm dev
 ## Features
 
 Stepped form with:
+
 - Step 1: Cuisine/Area dynamic select
 - Step 2: Category select
-  
+
 Suggested meal after form submission with "New Idea" button to suggest again with same criteria.
 
 Suggestions History reactive table displaying liked/disliked suggestions.
