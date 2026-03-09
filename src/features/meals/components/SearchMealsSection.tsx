@@ -32,7 +32,7 @@ function SearchMealsSection() {
   };
 
   return (
-    <div className="flex flex-col gap-4">
+    <div className="flex flex-col gap-4 mb-4">
       <CoreInput
         id="meal-name-input"
         label="Meal name"
@@ -41,7 +41,9 @@ function SearchMealsSection() {
       />
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
         {isFetching &&
-          Array.from({ length: 4 }).map((_, i) => <SkeletonCardLayout key={i} />)}
+          Array.from({ length: 4 }).map((_, i) => (
+            <SkeletonCardLayout key={i} />
+          ))}
         {!isFetching &&
           searchedMeals?.map((meal) => <MealCard key={meal.id} meal={meal} />)}
         {!isFetching && searchedMeals?.length === 0 && <p>No results found</p>}

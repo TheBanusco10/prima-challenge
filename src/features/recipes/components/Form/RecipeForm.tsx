@@ -4,6 +4,7 @@ import ConstraintsStep from "./Steps/ConstraintsStep";
 import { useEffect, useState } from "react";
 import useRecipeAreas from "../../hooks/useRecipeAreas";
 import useRecipeCategories from "../../hooks/useRecipeCategories";
+import CoreFormStepsProgress from "@/features/core/components/CoreFormStepsProgress";
 
 interface Props {
   onSubmit: (formState: Record<string, any>) => void;
@@ -53,6 +54,12 @@ function RecipeForm({ onSubmit }: Props) {
       onPreviousStep={() => setCurrentStep(currentStep - 1)}
       onSubmit={() => onSubmit(formState)}
     >
+      <CoreForm.Title>
+        <CoreFormStepsProgress
+          currentStep={currentStep}
+          titles={["Cuisine", "Category"]}
+        />
+      </CoreForm.Title>
       {STEPS.map(
         (Step, index) =>
           currentStep === index + 1 && (

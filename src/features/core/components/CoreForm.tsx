@@ -1,3 +1,5 @@
+import type React from "react";
+
 interface Props {
   totalSteps: number;
   currentStep?: number;
@@ -5,6 +7,10 @@ interface Props {
   onNextStep?: () => void;
   onPreviousStep?: () => void;
   onSubmit?: () => void;
+}
+
+function CoreFormTitle({ children }: React.PropsWithChildren) {
+  return <div>{children}</div>;
 }
 
 function CoreForm({
@@ -22,6 +28,7 @@ function CoreForm({
 
   return (
     <section className="flex flex-col gap-8 p-4">
+      <CoreFormTitle />
       {children}
       <div className="flex justify-between">
         <button
@@ -53,5 +60,7 @@ function CoreForm({
     </section>
   );
 }
+
+CoreForm.Title = CoreFormTitle;
 
 export default CoreForm;
