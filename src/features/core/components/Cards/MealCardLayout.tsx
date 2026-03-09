@@ -1,3 +1,4 @@
+import placeholder from "@/assets/placeholder.svg";
 import CoreCard from "@/features/core/components/CoreCard";
 
 interface Props {
@@ -10,12 +11,17 @@ interface Props {
   additionalClasses?: string;
 }
 
+function getDefaultImage(evt: React.SyntheticEvent<HTMLImageElement, Event>) {
+  evt.currentTarget.src = placeholder;
+}
+
 function Image({ imageUrl, imageAlt }: { imageUrl: string; imageAlt: string }) {
   return (
     <img
-      className="w-full h-64 object-cover"
+      className="w-full h-64 object-cover bg-base-300"
       src={`${imageUrl}/medium`}
       alt={imageAlt}
+      onError={getDefaultImage}
     />
   );
 }
