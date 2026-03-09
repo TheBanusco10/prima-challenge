@@ -14,11 +14,13 @@ function SearchMealsSection() {
   );
   const { isFetching, getMealsByName } = useMeals();
 
-  const getMealsDebounce = debounce(async (name: string) => {
+  const fetchMeals = async (name: string) => {
     const meals = await getMealsByName(name);
 
     setSearchedMeals(meals?.slice(0, MAX_MEALS_TO_SHOW) ?? []);
-  }, 500);
+  };
+
+  const getMealsDebounce = debounce(fetchMeals, 500);
 
   const handleGetMeals = async (name: string) => {
     if (!name.length) {
