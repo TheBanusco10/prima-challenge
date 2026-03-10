@@ -47,6 +47,7 @@ function RecipeForm({ onSubmit }: Props) {
 
   return (
     <CoreForm
+      submitLabel="Suggest"
       currentStep={currentStep}
       totalSteps={STEPS.length}
       isValidStep={isValidStep}

@@ -2,6 +2,7 @@ import type React from "react";
 
 interface Props {
   totalSteps: number;
+  submitLabel?: string;
   currentStep?: number;
   isValidStep?: boolean;
   onNextStep?: () => void;
@@ -16,6 +17,7 @@ function CoreFormTitle({ children }: React.PropsWithChildren) {
 function CoreForm({
   children,
   totalSteps,
+  submitLabel = "Send",
   isValidStep = true,
   currentStep = 1,
   onNextStep,
@@ -53,7 +55,7 @@ function CoreForm({
             disabled={!isValidStep}
             onClick={onSubmit}
           >
-            Send
+            {submitLabel}
           </button>
         )}
       </div>
